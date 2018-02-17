@@ -28,7 +28,7 @@ class TestServer
         '/favicon.ico' => [200, {}, ['']]
       }
 
-      %i[severe info none].reduce(defaults) do |replies, template|
+      %i[severe info none multiline].reduce(defaults) do |replies, template|
         replies["/#{template}"] = [200, {}, [send(template)]]
         replies
       end
@@ -43,6 +43,12 @@ class TestServer
     def info
       template <<~JS
         console.log("A console log");
+      JS
+    end
+
+    def multiline
+      template <<~JS
+        console.log("Some log\\n    in somefile.jsx\\n    in anotherfile.jsx");
       JS
     end
 

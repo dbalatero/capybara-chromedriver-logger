@@ -18,9 +18,8 @@ RSpec.describe "watcher", with_server: true, js: true, type: :feature do
     visit "/none"
 
     expect_to_have_inserted_element
-    expect_no_log_messages
-
     logger.after_example!
+    expect_no_log_messages
   end
 
   it "receiving console errors without error raising" do
@@ -40,6 +39,15 @@ RSpec.describe "watcher", with_server: true, js: true, type: :feature do
     expect { logger.after_example! }
       .to raise_error(Capybara::Chromedriver::Logger::JsError, /A console error/)
     expect_log_message("A console error")
+  end
+
+  it "receiving logs with linebreaks" do
+    visit "/multiline"
+
+    expect_to_have_inserted_element
+    logger.after_example!
+
+    expect_log_message("Some log\n         in somefile.jsx\n         in anotherfile.jsx")
   end
 
   it "receiving console info logs" do

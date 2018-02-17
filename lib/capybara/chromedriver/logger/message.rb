@@ -16,12 +16,15 @@ module Capybara
         end
 
         def to_s
-          [
+          first_line = [
             "\u{1F4DC} ",
             log_level,
-            file_and_location,
-            message
+            file_and_location
           ].compact.join(' ')
+
+          second_line = formatted_message
+
+          [first_line, second_line].join("\n")
         end
 
         def error?
@@ -35,6 +38,16 @@ module Capybara
           'INFO' => :light_green,
           'DEBUG' => :light_blue
         }.freeze
+
+        LEADING_SPACES = ' ' * 5
+
+        def formatted_message
+          message
+            .gsub('\n', "\n")
+            .split("\n")
+            .map { |line| "#{LEADING_SPACES}#{line}" }
+            .join("\n")
+        end
 
         def level_color
           COLORS[level] || :light_blue
