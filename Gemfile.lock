@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    capybara-chromedriver-logger (0.1.0)
+    capybara-chromedriver-logger (0.1.1)
       capybara
       colorize
       net-http-persistent
