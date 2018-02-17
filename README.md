@@ -11,6 +11,8 @@ We currently assume you're running:
 
 to handle your JS feature specs. I'd love to expand support for other combinations of test environments!
 
+<img src="https://raw.githubusercontent.com/dbalatero/capybara-chromedriver-logger/master/images/example.png" />
+
 ## Installation
 
 Add this line to your application's Gemfile:
