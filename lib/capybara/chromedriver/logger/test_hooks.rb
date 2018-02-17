@@ -1,13 +1,13 @@
 module Capybara
   module Chromedriver
     module Logger
-      class RSpec
-        def self.configure!
+      class TestHooks
+        def self.for_rspec!
           ::RSpec.configure do |config|
-            filters = { type: :feature, js: true }
-            watcher = Capybara::Chromedriver::Logger::Rspec.instance
+            filters = { type: :feature }
+            watcher = Capybara::Chromedriver::Logger::Watcher.instance
 
-            config.before :suite, filters do
+            config.before :suite do
               watcher.before_suite!
             end
 

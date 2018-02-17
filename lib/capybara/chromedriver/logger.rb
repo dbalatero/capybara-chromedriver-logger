@@ -2,13 +2,12 @@ require 'capybara'
 require 'selenium-webdriver'
 require 'selenium/webdriver/remote/http/persistent'
 
+require "capybara/chromedriver/logger/test_hooks"
 require "capybara/chromedriver/logger/version"
 require "capybara/chromedriver/logger/js_error"
 require "capybara/chromedriver/logger/message"
 require "capybara/chromedriver/logger/watcher"
 require "capybara/chromedriver/logger/selenium_thread_safe_bridge"
-
-require "capybara/chromedriver/logger/rspec"
 
 class Selenium::WebDriver::Remote::Bridge
   prepend Capybara::Chromedriver::Logger::SeleniumThreadSafeBridge
