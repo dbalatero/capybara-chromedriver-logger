@@ -1,6 +1,8 @@
 require "bundler/setup"
 require "capybara/chromedriver/logger"
 
+Dir.glob("spec/support/**/*.rb") { |f| require_relative "../#{f}" }
+
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"
