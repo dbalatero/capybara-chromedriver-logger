@@ -9,8 +9,6 @@ RSpec.describe "watcher", with_server: true, js: true, type: :feature do
 
   before do
     Capybara::Chromedriver::Logger.raise_js_errors = false
-
-    logger.before_suite!
     logger.before_example!
   end
 

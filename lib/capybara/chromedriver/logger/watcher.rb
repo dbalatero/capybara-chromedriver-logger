@@ -4,10 +4,6 @@ module Capybara
   module Chromedriver
     module Logger
       class Watcher
-        def self.instance
-          @instance ||= new
-        end
-
         def initialize(log_destination: $stdout, filters: nil)
           @log_destination = log_destination
           @last_timestamp = 0
@@ -18,17 +14,9 @@ module Capybara
           @errors = []
         end
 
-        def before_suite!
-          @thread = Thread.new do
-            loop do
-              flush_logs! unless paused?
-              sleep 0.1
-            end
-          end
-        end
-
         def before_example!
           unpause!
+          start_listener!
         end
 
         def after_example!
@@ -42,6 +30,15 @@ module Capybara
         end
 
         private
+
+        def start_listener!
+          @thread = Thread.new do
+            loop do
+              flush_logs! unless paused?
+              sleep 0.1
+            end
+          end
+        end
 
         def raise_errors_if_needed!
           return unless Capybara::Chromedriver::Logger.raise_js_errors?

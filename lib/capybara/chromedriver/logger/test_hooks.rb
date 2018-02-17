@@ -5,18 +5,14 @@ module Capybara
         def self.for_rspec!
           ::RSpec.configure do |config|
             filters = { type: :feature }
-            watcher = Capybara::Chromedriver::Logger::Watcher.instance
-
-            config.before :suite do
-              watcher.before_suite!
-            end
 
             config.before :each, filters do
-              watcher.before_example!
+              @_log_watcher = Capybara::Chromedriver::Logger::Watcher.new
+              @_log_watcher.before_example!
             end
 
             config.after :each, filters do
-              watcher.after_example!
+              @_log_watcher.after_example!
             end
           end
         end
