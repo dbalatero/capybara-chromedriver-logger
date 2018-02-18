@@ -36,6 +36,7 @@ module Capybara
         COLORS = {
           'SEVERE' => :light_red,
           'INFO' => :light_green,
+          'WARNING' => :light_cyan,
           'DEBUG' => :light_blue
         }.freeze
 
