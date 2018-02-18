@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    capybara-chromedriver-logger (0.1.2)
+    capybara-chromedriver-logger (0.2.0)
       capybara
       colorize
 
