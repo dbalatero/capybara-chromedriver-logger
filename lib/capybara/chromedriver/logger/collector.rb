@@ -1,44 +1,21 @@
-require 'thread'
-
 module Capybara
   module Chromedriver
     module Logger
-      class Watcher
+      class Collector
         def initialize(log_destination: $stdout, filters: nil)
           @log_destination = log_destination
-          @last_timestamp = 0
-          @mutex = Mutex.new
-          @thread = nil
-          @paused = true
           @filters = filters || Capybara::Chromedriver::Logger.filters
           @errors = []
         end
 
-        def before_example!
-          unpause!
-          start_listener!
-        end
-
-        def after_example!
-          pause!
+        def flush_and_check_errors!
           flush_logs!
 
           raise_errors_if_needed!
           clear_errors!
-        ensure
-          thread.kill if thread
         end
 
         private
-
-        def start_listener!
-          @thread = Thread.new do
-            loop do
-              flush_logs! unless paused?
-              sleep 0.1
-            end
-          end
-        end
 
         def raise_errors_if_needed!
           return unless Capybara::Chromedriver::Logger.raise_js_errors?
@@ -53,13 +30,9 @@ module Capybara
 
         def flush_logs!
           browser_logs.each do |log|
-            next if log.timestamp < last_timestamp
-
-            @last_timestamp = log.timestamp
-
             message = Message.new(log)
-
             errors << message if message.error?
+
             log_destination.puts message.to_s unless should_filter?(message)
           end
         end
@@ -73,14 +46,12 @@ module Capybara
         end
 
         def logs(type)
-          mutex.synchronize do
-            Capybara
-              .current_session
-              .driver.browser
-              .manage
-              .logs
-              .get(type)
-          end
+          Capybara
+            .current_session
+            .driver.browser
+            .manage
+            .logs
+            .get(type)
         end
 
         def should_filter?(message)
@@ -91,36 +62,12 @@ module Capybara
           @errors
         end
 
-        def unpause!
-          @paused = false
-        end
-
-        def pause!
-          @paused = true
-        end
-
-        def mutex
-          @mutex
-        end
-
         def filters
           @filters
         end
 
-        def last_timestamp
-          @last_timestamp
-        end
-
-        def paused?
-          !!@paused
-        end
-
         def log_destination
           @log_destination
-        end
-
-        def thread
-          @thread
         end
       end
     end

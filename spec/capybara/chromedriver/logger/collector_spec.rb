@@ -1,22 +1,21 @@
-RSpec.describe "watcher", with_server: true, js: true, type: :feature do
+RSpec.describe "collector", with_server: true, js: true, type: :feature do
   let(:log_destination) do
     StringIO.new
   end
 
   let(:logger) do
-    Capybara::Chromedriver::Logger::Watcher.new(log_destination: log_destination)
+    Capybara::Chromedriver::Logger::Collector.new(log_destination: log_destination)
   end
 
   before do
     Capybara::Chromedriver::Logger.raise_js_errors = false
-    logger.before_example!
   end
 
   it "receiving no errors" do
     visit "/none"
 
     expect_to_have_inserted_element
-    logger.after_example!
+    logger.flush_and_check_errors!
     expect_no_log_messages
   end
 
@@ -24,7 +23,7 @@ RSpec.describe "watcher", with_server: true, js: true, type: :feature do
     visit "/severe"
 
     expect_to_have_inserted_element
-    expect { logger.after_example! }.to_not raise_error
+    expect { logger.flush_and_check_errors! }.to_not raise_error
     expect_log_message("A console error")
   end
 
@@ -34,7 +33,7 @@ RSpec.describe "watcher", with_server: true, js: true, type: :feature do
     visit "/severe"
 
     expect_to_have_inserted_element
-    expect { logger.after_example! }
+    expect { logger.flush_and_check_errors! }
       .to raise_error(Capybara::Chromedriver::Logger::JsError, /A console error/)
     expect_log_message("A console error")
   end
@@ -43,7 +42,7 @@ RSpec.describe "watcher", with_server: true, js: true, type: :feature do
     visit "/multiline"
 
     expect_to_have_inserted_element
-    logger.after_example!
+    logger.flush_and_check_errors!
 
     expect_log_message("Some log\n         in somefile.jsx\n         in anotherfile.jsx")
   end
@@ -52,7 +51,7 @@ RSpec.describe "watcher", with_server: true, js: true, type: :feature do
     visit "/info"
 
     expect_to_have_inserted_element
-    logger.after_example!
+    logger.flush_and_check_errors!
     expect_log_message("A console log")
   end
 

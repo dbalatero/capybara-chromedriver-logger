@@ -1,13 +1,12 @@
 # capybara-chromedriver-logger
 
-This gem provides real-time `console.log` debug output for Ruby feature specs running under Chromedriver.
+This gem provides `console.log` debug output for Ruby feature specs running under Chromedriver.
 
 We currently assume you're running:
 
 * capybara
-* chromedriver
+* chromedriver + selenium-webdriver
 * rspec
-* selenium-webdriver
 
 to handle your JS feature specs. I'd love to expand support for other combinations of test environments!
 
@@ -42,14 +41,10 @@ Capybara.register_driver(:chrome) do |app|
     }
   )
 
-  # Selenium needs to use a thread-safe HTTP client
-  client = Capybara::Chromedriver::Logger::SeleniumHttpClient.new
-
   Capybara::Selenium::Driver.new(
     app,
     browser: :chrome,
-    desired_capabilities: capabilities,
-    http_client: client
+    desired_capabilities: capabilities
   )
 end
 
@@ -57,8 +52,15 @@ end
 Capybara.default_driver = :chrome
 Capybara.javascript_driver = :chrome
 
-# Setup before/after hooks for your feature specs
+# Option 1: Setup hooks for your feature specs
 Capybara::Chromedriver::Logger::TestHooks.for_rspec!
+
+# Option 2: if you prefer to hook it in manually:
+RSpec.configure do |config|
+  config.after :each, type: :feature do
+    Capybara::Chromedriver::Logger::TestHooks.after_example!
+  end
+end
 ```
 
 ## Configuration
