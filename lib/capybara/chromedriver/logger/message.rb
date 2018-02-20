@@ -45,6 +45,7 @@ module Capybara
         def formatted_message
           message
             .gsub('\n', "\n")
+            .gsub('\u003C', "\u003C")
             .split("\n")
             .map { |line| "#{LEADING_SPACES}#{line}" }
             .join("\n")
