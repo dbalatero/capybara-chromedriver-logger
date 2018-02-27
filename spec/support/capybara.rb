@@ -2,6 +2,9 @@ require 'selenium-webdriver'
 require 'capybara/rspec'
 
 Capybara.register_driver :selenium do |app|
+  client = Selenium::WebDriver::Remote::Http::Default.new
+  client.read_timeout = 240
+
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
     loggingPrefs: {
       browser: 'ALL'
@@ -11,7 +14,8 @@ Capybara.register_driver :selenium do |app|
   Capybara::Selenium::Driver.new(
     app,
     browser: :chrome,
-    desired_capabilities: capabilities
+    desired_capabilities: capabilities,
+    http_client: client
   )
 end
 
