@@ -5,7 +5,25 @@ Capybara.register_driver :selenium do |app|
   client = Selenium::WebDriver::Remote::Http::Default.new
   client.read_timeout = 240
 
+  args = %w[
+    disable-default-apps
+    disable-extensions
+    disable-infobars
+    disable-gpu
+    disable-popup-blocking
+    headless
+    no-default-browser-check
+    no-first-run
+    no-sandbox
+    no-proxy-server
+    start-fullscreen
+    --window-size=1600,1200
+  ]
+
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+    chromeOptions: {
+      args: args
+    },
     loggingPrefs: {
       browser: 'ALL'
     }
