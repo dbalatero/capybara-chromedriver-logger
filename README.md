@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/dbalatero/capybara-chromedriver-logger.svg?branch=master)](https://travis-ci.org/dbalatero/capybara-chromedriver-logger)
+
 # capybara-chromedriver-logger
 
 This gem provides `console.log` debug output for Ruby feature specs running under Chromedriver.
