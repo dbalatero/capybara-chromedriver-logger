@@ -9,8 +9,10 @@ module Capybara
 
         def self.for_rspec!
           ::RSpec.configure do |config|
-            config.after :each, type: :feature do
-              Capybara::Chromedriver::Logger::TestHooks.after_example!
+            %i[feature system].each do |type|
+              config.after :each, type: type do
+                Capybara::Chromedriver::Logger::TestHooks.after_example!
+              end
             end
           end
         end
