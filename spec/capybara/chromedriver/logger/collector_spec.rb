@@ -55,6 +55,18 @@ RSpec.describe "collector", with_server: true, js: true, type: :feature do
     expect_log_message("A console log")
   end
 
+  it "should ignore filtered severity types" do
+    Capybara::Chromedriver::Logger.filter_levels = %i[info]
+
+    visit "/info"
+
+    expect_to_have_inserted_element
+    logger.flush_and_check_errors!
+    expect_no_log_messages
+
+    Capybara::Chromedriver::Logger.filter_levels = nil
+  end
+
   def expect_no_log_messages
     expect(log_destination.string).to eq('')
   end

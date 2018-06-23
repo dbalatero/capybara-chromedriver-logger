@@ -88,6 +88,16 @@ Capybara::Chromedriver::Logger.filters = [
   /Download the React DevTools/i,
   /The SSL certificate used to load resources from/i
 ]
+
+# If you want to filter out specific severity levels, you can do so here:
+#
+# default: nil
+Capybara::Chromedriver::Logger.filter_levels = %i[
+  severe
+  info
+  warning
+  debug
+]
 ```
 
 ## Development
