@@ -1,3 +1,8 @@
+# 0.2.1 [June 23, 2018]
+
+* Added `filter_levels` option for filtering by log level (closes #4)
+* Fixed Travis CI build
+
 # 0.2.0 [Feb 17, 2018]
 
 * Stop using threads, it's a fool's errand. We now output logs at the end of each test
