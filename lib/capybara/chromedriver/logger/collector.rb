@@ -2,10 +2,12 @@ module Capybara
   module Chromedriver
     module Logger
       class Collector
-        def initialize(log_destination: $stdout, filters: nil)
-          @log_destination = log_destination
-          @filters = filters || Capybara::Chromedriver::Logger.filters
+        def initialize(options = {})
           @errors = []
+          @log_destination = options[:log_destination] || $stdout
+          @filters = options[:filters] || Capybara::Chromedriver::Logger.filters
+          @filter_levels = options[:filter_levels] ||
+            Capybara::Chromedriver::Logger.filter_levels
         end
 
         def flush_and_check_errors!
@@ -24,8 +26,7 @@ module Capybara
           formatted_errors = errors.map(&:to_s)
           error_list = formatted_errors.join("\n")
 
-          raise JsError,
-            "Got some JS errors during testing:\n\n#{error_list}"
+          raise JsError, "Got some JS errors during testing:\n\n#{error_list}"
         end
 
         def flush_logs!
@@ -55,20 +56,21 @@ module Capybara
         end
 
         def should_filter?(message)
+          should_filter_by_level?(message) || should_filter_content?(message)
+        end
+
+        def should_filter_by_level?(message)
+          filter_levels.include?(message.level)
+        end
+
+        def should_filter_content?(message)
           filters.any? { |filter| filter =~ message.message }
         end
 
-        def errors
-          @errors
-        end
-
-        def filters
-          @filters
-        end
-
-        def log_destination
-          @log_destination
-        end
+        attr_reader :errors
+        attr_reader :filters
+        attr_reader :filter_levels
+        attr_reader :log_destination
       end
     end
   end

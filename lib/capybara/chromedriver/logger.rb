@@ -1,11 +1,11 @@
 require 'capybara'
 require 'selenium-webdriver'
 
-require "capybara/chromedriver/logger/test_hooks"
-require "capybara/chromedriver/logger/version"
-require "capybara/chromedriver/logger/js_error"
-require "capybara/chromedriver/logger/message"
-require "capybara/chromedriver/logger/collector"
+require 'capybara/chromedriver/logger/test_hooks'
+require 'capybara/chromedriver/logger/version'
+require 'capybara/chromedriver/logger/js_error'
+require 'capybara/chromedriver/logger/message'
+require 'capybara/chromedriver/logger/collector'
 
 module Capybara
   module Chromedriver
@@ -18,6 +18,14 @@ module Capybara
 
       def filters=(filters)
         @filters = filters
+      end
+
+      def filter_levels
+        @filter_levels || []
+      end
+
+      def filter_levels=(filters)
+        @filter_levels = filters && filters.map(&:upcase).map(&:to_s)
       end
 
       def raise_js_errors?
