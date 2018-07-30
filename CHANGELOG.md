@@ -1,3 +1,7 @@
+# 0.3.0
+
+* Prevent errors from being raised if they match a filter
+
 # 0.2.1 [June 23, 2018]
 
 * Added `filter_levels` option for filtering by log level (closes #4)
