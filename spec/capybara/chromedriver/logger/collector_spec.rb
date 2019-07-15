@@ -9,6 +9,7 @@ RSpec.describe "collector", with_server: true, js: true, type: :feature do
 
   before do
     Capybara::Chromedriver::Logger.raise_js_errors = false
+    Capybara::Chromedriver::Logger.filters = []
   end
 
   it "receiving no errors" do
@@ -36,6 +37,17 @@ RSpec.describe "collector", with_server: true, js: true, type: :feature do
     expect { logger.flush_and_check_errors! }
       .to raise_error(Capybara::Chromedriver::Logger::JsError, /A console error/)
     expect_log_message("A console error")
+  end
+
+  it "receiving console errors with error raising and message text filtered" do
+    Capybara::Chromedriver::Logger.filters = [/A console error/]
+    Capybara::Chromedriver::Logger.raise_js_errors = true
+
+    visit "/severe"
+
+    expect_to_have_inserted_element
+    expect { logger.flush_and_check_errors! }.to_not raise_error
+    expect(log_destination.string).to be_empty
   end
 
   it "receiving logs with linebreaks" do
