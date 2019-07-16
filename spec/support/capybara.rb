@@ -22,7 +22,8 @@ Capybara.register_driver :selenium do |app|
 
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
     chromeOptions: {
-      args: args
+      args: args,
+      w3c: false
     },
     loggingPrefs: {
       browser: 'ALL'
