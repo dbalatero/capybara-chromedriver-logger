@@ -12,6 +12,26 @@ module Capybara
     module Logger
       extend self
 
+      def build_capabilities(loggingPrefs: {}, **options)
+        options[:chromeOptions] ||= {}
+
+        if options[:chromeOptions][:w3c]
+          warn "warning: Setting chromeOptions.w3c to true makes it not "\
+            "possible to get console.log messages from Chrome.\n\n"\
+            "Please see: https://github.com/SeleniumHQ/selenium/issues/7270"
+        else
+          options[:chromeOptions][:w3c] = false
+        end
+
+        options[:loggingPrefs] = loggingPrefs
+
+        # Support Chrome 75+
+        # see: https://github.com/SeleniumHQ/selenium/issues/7342
+        options["goog:loggingPrefs"] = loggingPrefs
+
+        ::Selenium::WebDriver::Remote::Capabilities.chrome(options)
+      end
+
       def filters
         @filters || []
       end
