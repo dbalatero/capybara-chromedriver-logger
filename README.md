@@ -36,10 +36,12 @@ You'll want to modify your `spec_helper.rb` file to configure Capybara correctly
 
 ```ruby
 Capybara.register_driver(:chrome) do |app|
-  # Turn on browser logs
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    loggingPrefs: {
-      browser: 'ALL'
+  # option 1:
+  # This wraps Selenium::WebDriver::Remote::Capabilities.chrome() with the
+  # correct settings for logging.
+  capabilities = Capybara::Chromedriver::Logger.build_capabilities(
+    chromeOptions: {
+      args: %w[headless]
     }
   )
 
@@ -63,6 +65,29 @@ RSpec.configure do |config|
     Capybara::Chromedriver::Logger::TestHooks.after_example!
   end
 end
+```
+
+If you don't want to use the capability wrapper above for any reason, you can
+still manually configure things:
+
+```ruby
+# option 2: manual setup
+# Turn on browser logs
+capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+  chromeOptions: {
+    args: %w[headless],
+    # required for Chrome 75+
+    w3c: false
+  },
+  # For up to Chrome 74
+  loggingPrefs: {
+    browser: 'ALL'
+  }
+  # for Chrome 75+
+  "goog:loggingPrefs" => {
+    browser: 'ALL'
+  }
+)
 ```
 
 ## Configuration

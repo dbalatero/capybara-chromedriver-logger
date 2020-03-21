@@ -20,12 +20,9 @@ Capybara.register_driver :selenium do |app|
     --window-size=1600,1200
   ]
 
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+  capabilities = Capybara::Chromedriver::Logger.build_capabilities(
     chromeOptions: {
       args: args
-    },
-    loggingPrefs: {
-      browser: 'ALL'
     }
   )
 

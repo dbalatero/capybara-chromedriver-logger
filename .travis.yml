@@ -1,11 +1,7 @@
 sudo: false
 language: ruby
 addons:
-  apt:
-    sources:
-      - google-chrome
-    packages:
-      - google-chrome-stable
+  chrome: stable
 rvm:
-  - 2.4.1
+  - 2.6.5
 before_install: gem install bundler -v 1.16.0

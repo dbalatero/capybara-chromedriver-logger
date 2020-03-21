@@ -1,4 +1,6 @@
+require "pry"
 require "bundler/setup"
+require "webdrivers/chromedriver"
 require "capybara/chromedriver/logger"
 
 Dir.glob("spec/support/**/*.rb") { |f| require_relative "../#{f}" }
