@@ -1,6 +1,8 @@
-# 0.3.0
+# 0.3.0 [March 21, 2020]
 
 * Prevent errors from being raised if they match a filter
+* Added instructions to the README about dealing with new versions of Chrome
+* Added a new `#build_capabilities` method to wrap the Capabilities configuration
 
 # 0.2.1 [June 23, 2018]
 
