@@ -42,12 +42,7 @@ Capybara.register_driver(:chrome) do |app|
   capabilities = Capybara::Chromedriver::Logger.build_capabilities(
     chromeOptions: {
       args: %w[headless]
-    },
-
-    # Make sure you set up logging here.
-    loggingPrefs: {
-      browser: 'ALL'
-    },
+    }
   )
 
   Capybara::Selenium::Driver.new(
@@ -81,6 +76,7 @@ still manually configure things:
 capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
   chromeOptions: {
     args: %w[headless],
+    # required for Chrome 75+
     w3c: false
   },
   # For up to Chrome 74

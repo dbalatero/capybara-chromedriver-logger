@@ -23,10 +23,7 @@ Capybara.register_driver :selenium do |app|
   capabilities = Capybara::Chromedriver::Logger.build_capabilities(
     chromeOptions: {
       args: args
-    },
-    loggingPrefs: {
-      browser: 'ALL'
-    },
+    }
   )
 
   Capybara::Selenium::Driver.new(

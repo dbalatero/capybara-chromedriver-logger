@@ -12,7 +12,7 @@ module Capybara
     module Logger
       extend self
 
-      def build_capabilities(loggingPrefs: {}, **options)
+      def build_capabilities(loggingPrefs: { browser: 'ALL' }, **options)
         options[:chromeOptions] ||= {}
 
         if options[:chromeOptions][:w3c]
@@ -21,6 +21,11 @@ module Capybara
             "Please see: https://github.com/SeleniumHQ/selenium/issues/7270"
         else
           options[:chromeOptions][:w3c] = false
+        end
+
+        if loggingPrefs[:browser] != 'ALL'
+          warn "warning: loggingPrefs needs to contain { browser: 'ALL' } "\
+            "when using Logger#build_capabilities"
         end
 
         options[:loggingPrefs] = loggingPrefs
