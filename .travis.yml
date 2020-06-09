@@ -3,4 +3,4 @@ addons:
   chrome: stable
 rvm:
   - 2.6.5
-
+cache: bundler
