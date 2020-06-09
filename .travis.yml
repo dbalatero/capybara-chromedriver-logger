@@ -1,7 +1,6 @@
-sudo: false
 language: ruby
 addons:
   chrome: stable
 rvm:
   - 2.6.5
-before_install: gem install bundler -v 1.16.0
+cache: bundler
