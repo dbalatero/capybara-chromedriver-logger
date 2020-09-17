@@ -35,6 +35,8 @@ Or install it yourself as:
 You'll want to modify your `spec_helper.rb` file to configure Capybara correctly:
 
 ```ruby
+require 'capybara/chromedriver/logger'
+
 Capybara.register_driver(:chrome) do |app|
   # option 1:
   # This wraps Selenium::WebDriver::Remote::Capabilities.chrome() with the
