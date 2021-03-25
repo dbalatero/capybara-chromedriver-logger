@@ -35,6 +35,7 @@ RSpec.describe "collector", with_server: true, js: true, type: :feature do
     expect_to_have_inserted_element
     expect { logger.flush_and_check_errors! }
       .to raise_error(Capybara::Chromedriver::Logger::JsError, /A console error/)
+
     expect_log_message("A console error")
   end
 
@@ -52,6 +53,7 @@ RSpec.describe "collector", with_server: true, js: true, type: :feature do
 
     expect_to_have_inserted_element
     logger.flush_and_check_errors!
+
     expect_log_message("A console log")
   end
 
