@@ -1,5 +1,3 @@
-require 'colorize'
-
 module Capybara
   module Chromedriver
     module Logger
@@ -33,11 +31,25 @@ module Capybara
 
         private
 
+        COLOR_CODES = {
+          default: 49,
+          light_red: 101,
+          light_green: 102,
+          light_blue: 103,
+          light_magenta: 105,
+          light_cyan: 106,
+        }.freeze
+
         COLORS = {
           'SEVERE' => :light_red,
           'INFO' => :light_green,
           'WARNING' => :light_cyan,
           'DEBUG' => :light_blue
+        }.freeze
+
+        COLOR_MODES = {
+          default: 0,
+          bold: 1,
         }.freeze
 
         LEADING_SPACES = ' ' * 5
@@ -56,13 +68,20 @@ module Capybara
         end
 
         def log_level
-          " #{level.downcase} ".colorize(color: :white, background: level_color).bold
+          colorize(
+            " #{level.downcase} ",
+            mode: :bold,
+            background: level_color,
+          )
         end
 
         def file_and_location
           return unless file && location
 
-          "#{file} #{location}".colorize(color: :white, background: :light_magenta)
+          colorize(
+            "#{file} #{location}",
+            background: :light_magenta
+          )
         end
 
         def extract_file_and_location!
@@ -72,6 +91,16 @@ module Capybara
 
           _, @file, @location, message = match.to_a
           @message = message.gsub(/^"(.+?)"$/, '\1')
+        end
+
+        def colorize(msg, background: :default, mode: :default)
+          mode_code = COLOR_MODES.fetch(mode)
+          color_code = 97 # white
+          background_code = COLOR_CODES.fetch(background)
+
+          str = "\033[#{mode_code};#{color_code};#{background_code}m"
+          str += msg
+          str + "\033[0m"
         end
       end
     end
