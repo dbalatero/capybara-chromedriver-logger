@@ -66,7 +66,7 @@ module Capybara
         end
 
         def extract_file_and_location!
-          match = message.match(/^(.+)\s+?(\d+:\d+)\s+?(.+)$/)
+          match = message.match(/^(.+)\s+?(\d+:\d+)\s+?(.+)$/m)
 
           return unless match
 
