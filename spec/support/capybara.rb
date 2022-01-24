@@ -2,9 +2,6 @@ require 'selenium-webdriver'
 require 'capybara/rspec'
 
 Capybara.register_driver :selenium do |app|
-  client = Selenium::WebDriver::Remote::Http::Default.new
-  client.read_timeout = 240
-
   args = %w[
     disable-default-apps
     disable-extensions
@@ -21,16 +18,19 @@ Capybara.register_driver :selenium do |app|
   ]
 
   capabilities = Capybara::Chromedriver::Logger.build_capabilities(
-    chromeOptions: {
-      args: args
-    }
+    args: args
   )
+
+  if ENV["VERBOSE_SELENIUM_WEBDRIVER"] == "1"
+    capabilities.add_argument "--verbose"
+    Selenium::WebDriver.logger.level = :debug
+  end
 
   Capybara::Selenium::Driver.new(
     app,
     browser: :chrome,
-    desired_capabilities: capabilities,
-    http_client: client
+    capabilities: capabilities,
+    timeout: 240
   )
 end
 
