@@ -12,7 +12,35 @@ module Capybara
     module Logger
       extend self
 
-      def build_capabilities(loggingPrefs: { browser: 'ALL' }, **options)
+      # == compatibility with selenium-webdriver 4.x
+      #
+      # Selenium::WebDriver's API changed significantly between 3.x and 4.x.
+      #
+      # This method delegates to build_capabilities_3 or build_capabilities_4.
+      def build_capabilities(logging_prefs: { browser: 'ALL' }, **options)
+        # backwards compatibility with camelcase
+        logging_prefs = options.delete(:loggingPrefs) || logging_prefs
+
+        if using_selenium_webdriver_4_or_higher?
+          # is there a better way to detect Selenium::WebDriver compatibility?
+          build_capabilities_4(logging_prefs: logging_prefs, **options)
+        else
+          build_capabilities_3(loggingPrefs: logging_prefs, **options)
+        end
+      end
+
+      # For selenium-webdriver >= 4.0.  Capabilities will be created using
+      # Selenium::WebDriver::Options.chrome and should be passed to
+      # Capybara::Selenium::Driver.new(..., capabilities: capabilities)
+      def build_capabilities_4(logging_prefs: { browser: 'ALL' }, **options)
+        ::Selenium::WebDriver::Options.chrome(**options,
+                                            logging_prefs: logging_prefs)
+      end
+
+      # For selenium-webdriver < 4.0.  Capabilities will be created using
+      # Selenium::WebDriver::Remote::Capabilities.chrome and should be passed to
+      # Capybara::Selenium::Driver.new(..., desired_capabilities: capabilities)
+      def build_capabilities_3(loggingPrefs: { browser: 'ALL' }, **options)
         options[:chromeOptions] ||= {}
 
         if options[:chromeOptions][:w3c]
@@ -60,6 +88,15 @@ module Capybara
       def raise_js_errors=(value)
         @raise_js_errors = value
       end
+
+      # always returns true if Gem::Version isn't defined
+      def using_selenium_webdriver_4_or_higher?
+        return true unless defined?(Gem::Version)
+        return false unless defined?(::Selenium::WebDriver::VERSION)
+        Gem::Version.new(::Selenium::WebDriver::VERSION) >=
+          Gem::Version.new("4.0.0.0.a")
+      end
+
     end
   end
 end
