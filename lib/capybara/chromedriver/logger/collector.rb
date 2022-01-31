@@ -53,7 +53,6 @@ module Capybara
           Capybara
             .current_session
             .driver.browser
-            .manage
             .logs
             .get(type)
         end
